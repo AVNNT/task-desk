@@ -1,8 +1,15 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-export_presets.cfg
-Export/TaskDesk.pck
+*.cfg
+C:\Users\PC\Documents\Godot\task-desk\Export\Taskta.exe
+C:\Users\PC\Documents\Godot\task-desk\Export\Taskta.pck
 Export/TaskDesk.exe
 Export/TaskDesk.console.exe
+<<<<<<< HEAD
 explosion.wav.import
+=======
+Export/TaskDesk.pck
+>>>>>>> parent of af5168d (Remove Godot project files and update .gitignore)
+.gitattributes
+.editorconfig
