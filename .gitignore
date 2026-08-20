@@ -1,9 +1,7 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-*.cfg
-C:\Users\PC\Documents\Godot\task-desk\Export\Taskta.exe
-C:\Users\PC\Documents\Godot\task-desk\Export\Taskta.pck
+export_presets.cfg
+Export/TaskDesk.pck
 Export/TaskDesk.exe
 Export/TaskDesk.console.exe
-Export/TaskDesk.pck
