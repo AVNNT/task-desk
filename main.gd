@@ -26,8 +26,6 @@ func _process(_delta: float) -> void:
 		update_timer_label()
 		update_rounds()
 
-
-	
 func update_timer_label():
 	var time_left := ceili(pomodoro.time_left if pomodoro.time_left > 0 else pomodoro.get_wait_time())
 	var minutes := time_left / 60
@@ -36,14 +34,12 @@ func update_timer_label():
 
 func update_rounds():
 	round_label.text = "%d / %d" % [rounds, round_left]
-	print(rounds)
 
 func add_round():
 	if rounds < round_left:
 		rounds += 1
 		update_rounds()
 	else:
-		print("done rounds")
 		round_label.text = "DONE"
 		return
 
@@ -92,7 +88,6 @@ func _on_start_paused_pressed() -> void:
 	start_paused.text = "Start" if pomodoro.paused else "Pause"	
 
 func _on_pomodoro_timeout() -> void:
-	print("done")
 	add_round()
 	
 func _on_reset_pressed() -> void:
