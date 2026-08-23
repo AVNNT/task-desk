@@ -13,3 +13,6 @@ Export/TaskDesk.pck
 >>>>>>> parent of af5168d (Remove Godot project files and update .gitignore)
 .gitattributes
 .editorconfig
+*.tmp
+*.uid
+*.import
