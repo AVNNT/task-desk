@@ -54,14 +54,14 @@ func _on_task_toggled(is_checked: bool, task: CheckBox) -> void:
 		var tween = task.create_tween()
 		tween.set_parallel(true)
 
-		tween.tween_property(task, "scale", Vector2(1.8, 1.8), 0.5) \
+		tween.tween_property(task, "scale", Vector2(1.8, 1.8), 0.15) \
 			.set_trans(Tween.TRANS_BACK) \
 			.set_ease(Tween.EASE_OUT)
 
-		tween.tween_property(task, "rotation", deg_to_rad(12), 0.5)
+		tween.tween_property(task, "rotation", deg_to_rad(12), 0.15)
 		$AudioStreamPlayer2D.play()
 		
-		tween.tween_property(task, "modulate:a", 0.0, 0.5)
+		tween.tween_property(task, "modulate:a", 0.0, 0.15)
 
 		await tween.finished
 		task.queue_free()
