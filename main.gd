@@ -81,6 +81,9 @@ func add_task():
 	
 	tasks_container.add_child(task)
 	new_task.clear()
+	new_task.release_focus()
+	new_task.grab_focus()
+	new_task.grab_click_focus()
 
 func _on_start_paused_pressed() -> void:
 	if pomodoro.is_stopped():
