@@ -2,7 +2,7 @@ extends Control
 
 @onready var add: Button = $PanelContainer/VBoxContainer/HBoxContainer/Add
 @onready var new_task: LineEdit = $PanelContainer/VBoxContainer/HBoxContainer/New_Task
-@onready var tasks_container: VBoxContainer = $PanelContainer/VBoxContainer/Tasks_Container
+@onready var tasks_container: VBoxContainer = $PanelContainer/VBoxContainer/ScrollContainer/Tasks_Container
 @onready var pomodoro: Timer = $Pomodoro
 @onready var time_label: Label = $PanelContainer/VBoxContainer/HBoxContainer3/Time_Label
 @onready var start_paused: Button = $PanelContainer/VBoxContainer/HBoxContainer2/Start_Paused

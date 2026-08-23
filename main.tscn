@@ -68,7 +68,11 @@ caret_blink = true
 layout_mode = 2
 text = "+"
 
-[node name="Tasks_Container" type="VBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1615292081]
+[node name="ScrollContainer" type="ScrollContainer" parent="PanelContainer/VBoxContainer" unique_id=1135467519]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Tasks_Container" type="VBoxContainer" parent="PanelContainer/VBoxContainer/ScrollContainer" unique_id=1615292081]
 layout_mode = 2
 alignment = 1
 
