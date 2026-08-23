@@ -12,18 +12,12 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_ig7tw")
 
-[node name="PanelContainer" type="PanelContainer" parent="." unique_id=1693538777]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+[node name="PanelContainer" type="CanvasLayer" parent="." unique_id=1163124361]
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=1334287900]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
+offset_left = 6.0
+offset_right = 392.0
+offset_bottom = 300.0
 
 [node name="HBoxContainer3" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1245884729]
 layout_mode = 2
@@ -32,14 +26,20 @@ alignment = 1
 [node name="Time_Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer3" unique_id=1910295293]
 layout_mode = 2
 size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 24
 text = "25:00"
+
+[node name="VSeparator" type="VSeparator" parent="PanelContainer/VBoxContainer/HBoxContainer3" unique_id=1391107141]
+layout_mode = 2
 
 [node name="Round_Label" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer3" unique_id=400678022]
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "0 / 4"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=688768513]
 layout_mode = 2
+alignment = 1
 
 [node name="Start_Paused" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer2" unique_id=1374786945]
 layout_mode = 2
@@ -57,13 +57,12 @@ text = "Complete"
 layout_mode = 2
 size_flags_vertical = 4
 offset_transform_position = Vector2(0.435, 0)
-alignment = 1
 
 [node name="New_Task" type="LineEdit" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=1199244350]
 layout_mode = 2
-placeholder_text = "Task"
-alignment = 3
+placeholder_text = "Task Name"
 expand_to_text_length = true
+caret_blink = true
 
 [node name="Add" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=645511968]
 layout_mode = 2

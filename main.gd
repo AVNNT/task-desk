@@ -16,15 +16,16 @@ var round_left := 4
 func _ready() -> void:
 	rounds = 0
 	pomodoro.set_wait_time(wait_time)
+	new_task.text_submitted.connect(_on_add_pressed)
+	add.pressed.connect(add_task)
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if pomodoro.is_stopped():
-		pomodoro.set_wait_time(wait_time)
 		return
-	else:
-		update_timer_label()
-		update_rounds()
+		
+	update_timer_label()
+	update_rounds()
 
 func update_timer_label():
 	var time_left := ceili(pomodoro.time_left if pomodoro.time_left > 0 else pomodoro.get_wait_time())
@@ -40,23 +41,12 @@ func add_round():
 		rounds += 1
 		update_rounds()
 	else:
+		rounds = 0
 		round_label.text = "DONE"
 		return
 
-func _on_add_pressed() -> void:
-	var task_name = new_task.text
-
-	if task_name.is_empty():
-		return
-		
-	var task = CheckBox.new()
-	task.text = task_name
-	
-	task.toggled.connect(_on_task_toggled.bind(task))
-	
-	tasks_container.add_child(task)
-	print(task_name)
-	new_task.clear()
+func _on_add_pressed(_submitted_text: String = "") -> void:
+	add_task()
 
 func _on_task_toggled(is_checked: bool, task: CheckBox) -> void:
 	if is_checked:
@@ -78,6 +68,20 @@ func _on_task_toggled(is_checked: bool, task: CheckBox) -> void:
 	else:
 		return
 	
+func add_task():
+	var task_name = new_task.text.strip_edges()
+
+	if task_name.is_empty():
+		return
+		
+	var task = CheckBox.new()
+	task.text = task_name
+	
+	task.toggled.connect(_on_task_toggled.bind(task))
+	
+	tasks_container.add_child(task)
+	new_task.clear()
+
 func _on_start_paused_pressed() -> void:
 	if pomodoro.is_stopped():
 		pomodoro.start()
@@ -103,4 +107,3 @@ func _on_complete_pressed() -> void:
 	else:
 		add_round()
 		_on_reset_pressed()
-		
