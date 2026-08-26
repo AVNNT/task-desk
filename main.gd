@@ -7,6 +7,7 @@ extends Control
 @onready var time_label: Label = $PanelContainer/VBoxContainer/HBoxContainer3/Time_Label
 @onready var start_paused: Button = $PanelContainer/VBoxContainer/HBoxContainer2/Start_Paused
 @onready var round_label: Label = $PanelContainer/VBoxContainer/HBoxContainer3/Round_Label
+@onready var h_box_container: HBoxContainer = $PanelContainer/VBoxContainer/HBoxContainer
 
 var wait_time := 1500
 var rounds := 0
@@ -89,6 +90,7 @@ func _on_start_paused_pressed() -> void:
 	if pomodoro.is_stopped():
 		pomodoro.start()
 		start_paused.text = "Pause"
+		h_box_container.hide()
 		return
 		
 	pomodoro.paused = not pomodoro.paused
@@ -99,6 +101,7 @@ func _on_pomodoro_timeout() -> void:
 	
 func _on_reset_pressed() -> void:
 	pomodoro.stop()
+	h_box_container.show()
 	pomodoro.paused = false
 	pomodoro.set_wait_time(wait_time)	
 	start_paused.text = "Start"
@@ -108,5 +111,6 @@ func _on_complete_pressed() -> void:
 	if pomodoro.is_stopped():
 		return
 	else:
+		h_box_container.show()
 		add_round()
 		_on_reset_pressed()
