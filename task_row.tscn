@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://task_row.gd" id="1_row"]
+
+[node name="TaskRow" type="PanelContainer"]
+theme_type_variation = &"TaskCard"
+script = ExtResource("1_row")
+
+[node name="margin" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 7
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 7
+
+[node name="content" type="HBoxContainer" parent="margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="check" type="CheckBox" parent="margin/content"]
+layout_mode = 2
+
+[node name="label" type="Label" parent="margin/content"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+text = "Task"
+vertical_alignment = 1
+clip_text = true

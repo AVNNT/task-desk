@@ -1,7 +1,8 @@
-[gd_scene format=3 uid="uid://d4luxcwqoyk28"]
+[gd_scene load_steps=4 format=3 uid="uid://d4luxcwqoyk28"]
 
 [ext_resource type="Script" uid="uid://b6y8rd7xrmrd2" path="res://main.gd" id="1_ig7tw"]
-[ext_resource type="AudioStream" uid="uid://cjnyyhmgnhsam" path="res://explosion.wav" id="2_0xm2m"]
+[ext_resource type="Theme" path="res://theme/theme.tres" id="2_theme"]
+[ext_resource type="AudioStream" uid="uid://cjnyyhmgnhsam" path="res://explosion.wav" id="3_0xm2m"]
 
 [node name="Main" type="Control" unique_id=522916632]
 layout_mode = 3
@@ -10,84 +11,110 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 script = ExtResource("1_ig7tw")
 
-[node name="main_layer" type="CanvasLayer" parent="." unique_id=1163124361]
+[node name="app_bg" type="PanelContainer" parent="." unique_id=1163124361]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_type_variation = &"AppBackground"
 
-[node name="layout" type="VBoxContainer" parent="main_layer" unique_id=1334287900]
-offset_left = 6.0
-offset_right = 392.0
-offset_bottom = 300.0
-
-[node name="stats_row" type="HBoxContainer" parent="main_layer/layout" unique_id=1245884729]
+[node name="layout" type="VBoxContainer" parent="app_bg" unique_id=1334287900]
 layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="stats_row" type="HBoxContainer" parent="app_bg/layout" unique_id=1245884729]
+layout_mode = 2
+theme_override_constants/separation = 10
 alignment = 1
 
-[node name="time_label" type="Label" parent="main_layer/layout/stats_row" unique_id=1910295293]
+[node name="time_label" type="Label" parent="app_bg/layout/stats_row" unique_id=1910295293]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"TimerLabel"
 text = "25:00"
 
-[node name="VSeparator" type="VSeparator" parent="main_layer/layout/stats_row" unique_id=1391107141]
+[node name="sep" type="VSeparator" parent="app_bg/layout/stats_row" unique_id=1391107141]
 layout_mode = 2
 
-[node name="round_label" type="Label" parent="main_layer/layout/stats_row" unique_id=400678022]
+[node name="round_label" type="Label" parent="app_bg/layout/stats_row" unique_id=400678022]
 layout_mode = 2
-theme_override_font_sizes/font_size = 24
+theme_type_variation = &"MutedLabel"
 text = "0 / 4"
+vertical_alignment = 1
 
-[node name="controls_row" type="HBoxContainer" parent="main_layer/layout" unique_id=688768513]
+[node name="controls_row" type="HBoxContainer" parent="app_bg/layout" unique_id=688768513]
 layout_mode = 2
+theme_override_constants/separation = 6
 alignment = 1
 
-[node name="start_pause_button" type="Button" parent="main_layer/layout/controls_row" unique_id=1374786945]
+[node name="start_pause_button" type="Button" parent="app_bg/layout/controls_row" unique_id=1374786945]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_type_variation = &"AccentButton"
 text = "Start"
 
-[node name="reset_button" type="Button" parent="main_layer/layout/controls_row" unique_id=1368691223]
+[node name="reset_button" type="Button" parent="app_bg/layout/controls_row" unique_id=1368691223]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Reset"
 
-[node name="complete_button" type="Button" parent="main_layer/layout/controls_row" unique_id=935933899]
+[node name="complete_button" type="Button" parent="app_bg/layout/controls_row" unique_id=935933899]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Complete"
 
-[node name="input_row" type="HBoxContainer" parent="main_layer/layout" unique_id=17796365]
+[node name="input_row" type="HBoxContainer" parent="app_bg/layout" unique_id=17796365]
 layout_mode = 2
-size_flags_vertical = 4
-offset_transform_position = Vector2(0.435, 0)
+theme_override_constants/separation = 6
 
-[node name="new_task_input" type="LineEdit" parent="main_layer/layout/input_row" unique_id=1199244350]
+[node name="new_task_input" type="LineEdit" parent="app_bg/layout/input_row" unique_id=1199244350]
 layout_mode = 2
 size_flags_horizontal = 3
-placeholder_text = "Task Name..."
+placeholder_text = "Add a task..."
 expand_to_text_length = true
 caret_blink = true
 
-[node name="add_button" type="Button" parent="main_layer/layout/input_row" unique_id=645511968]
+[node name="add_button" type="Button" parent="app_bg/layout/input_row" unique_id=645511968]
+custom_minimum_size = Vector2(34, 0)
 layout_mode = 2
 text = "+"
 
-[node name="task_scroll" type="ScrollContainer" parent="main_layer/layout" unique_id=1135467519]
+[node name="task_area" type="VBoxContainer" parent="app_bg/layout" unique_id=555000111]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 0
 
-[node name="tasks_list" type="VBoxContainer" parent="main_layer/layout/task_scroll" unique_id=1615292081]
+[node name="empty_label" type="Label" parent="app_bg/layout/task_area" unique_id=555000112]
 layout_mode = 2
-alignment = 1
+size_flags_vertical = 3
+theme_type_variation = &"MutedLabel"
+text = "No tasks yet"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="task_scroll" type="ScrollContainer" parent="app_bg/layout/task_area" unique_id=1135467519]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="tasks_list" type="VBoxContainer" parent="app_bg/layout/task_area/task_scroll" unique_id=1615292081]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
 
 [node name="pomodoro_timer" type="Timer" parent="." unique_id=1665342333]
 one_shot = true
 
 [node name="sfx_player" type="AudioStreamPlayer" parent="." unique_id=1322128623]
-stream = ExtResource("2_0xm2m")
+stream = ExtResource("3_0xm2m")
 
-[connection signal="pressed" from="main_layer/layout/controls_row/start_pause_button" to="." method="_on_start_pause_pressed"]
-[connection signal="pressed" from="main_layer/layout/controls_row/reset_button" to="." method="_on_reset_pressed"]
-[connection signal="pressed" from="main_layer/layout/controls_row/complete_button" to="." method="_on_complete_pressed"]
-[connection signal="pressed" from="main_layer/layout/input_row/add_button" to="." method="add_task"]
+[connection signal="pressed" from="app_bg/layout/controls_row/start_pause_button" to="." method="_on_start_pause_pressed"]
+[connection signal="pressed" from="app_bg/layout/controls_row/reset_button" to="." method="_on_reset_pressed"]
+[connection signal="pressed" from="app_bg/layout/controls_row/complete_button" to="." method="_on_complete_pressed"]
+[connection signal="pressed" from="app_bg/layout/input_row/add_button" to="." method="add_task"]
 [connection signal="timeout" from="pomodoro_timer" to="." method="_on_pomodoro_timeout"]
