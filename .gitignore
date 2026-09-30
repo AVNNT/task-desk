@@ -1,28 +1,16 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-*.cfg
-C:\Users\PC\Documents\Godot\task-desk\Export\Taskta.exe
-C:\Users\PC\Documents\Godot\task-desk\Export\Taskta.pck
-Export/TaskDesk.exe
-Export/TaskDesk.console.exe
-<<<<<<< HEAD
-explosion.wav.import
-=======
-Export/TaskDesk.pck
->>>>>>> parent of af5168d (Remove Godot project files and update .gitignore)
-.gitattributes
-.editorconfig
+
+# Editor autosave leftovers
 *.tmp
-*.uid
+
+# Godot-generated per-assignee files (removed from tracking in 69b57d8 / af5168d)
 *.import
-Export/Taskta.exe
-Export/Taskta.pck
-Export/Taskta.zip
-<<<<<<< HEAD
-Export/Taskta.zip
-Export/Taskta.zip
-/Export
-=======
->>>>>>> cdc579d4b14a5558126c87b35e6b477d34d6d1c7
-Export/Taskta.zip
+*.uid
+.editorconfig
+.gitattributes
+
+# Export presets and build output
+*.cfg
+/Export/

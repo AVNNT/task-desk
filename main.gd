@@ -1,116 +1,151 @@
 extends Control
 
-@onready var add: Button = $PanelContainer/VBoxContainer/HBoxContainer/Add
-@onready var new_task: LineEdit = $PanelContainer/VBoxContainer/HBoxContainer/New_Task
-@onready var tasks_container: VBoxContainer = $PanelContainer/VBoxContainer/ScrollContainer/Tasks_Container
-@onready var pomodoro: Timer = $Pomodoro
-@onready var time_label: Label = $PanelContainer/VBoxContainer/HBoxContainer3/Time_Label
-@onready var start_paused: Button = $PanelContainer/VBoxContainer/HBoxContainer2/Start_Paused
-@onready var round_label: Label = $PanelContainer/VBoxContainer/HBoxContainer3/Round_Label
-@onready var h_box_container: HBoxContainer = $PanelContainer/VBoxContainer/HBoxContainer
+enum SessionState { IDLE, RUNNING, PAUSED, FINISHED }
 
-var wait_time := 1500
+@onready var input_row: HBoxContainer = $main_layer/layout/input_row
+@onready var controls_row: HBoxContainer = $main_layer/layout/controls_row
+@onready var tasks_list: VBoxContainer = $main_layer/layout/task_scroll/tasks_list
+@onready var new_task_input: LineEdit = $main_layer/layout/input_row/new_task_input
+@onready var add_button: Button = $main_layer/layout/input_row/add_button
+@onready var start_pause_button: Button = $main_layer/layout/controls_row/start_pause_button
+@onready var time_label: Label = $main_layer/layout/stats_row/time_label
+@onready var round_label: Label = $main_layer/layout/stats_row/round_label
+@onready var pomodoro_timer: Timer = $pomodoro_timer
+@onready var sfx_player: AudioStreamPlayer = $sfx_player
+
+@export_range(60, 3600, 30) var work_seconds := 1500
+@export_range(1, 12) var round_count := 4
+
 var rounds := 0
-var round_left := 4
+var state: SessionState = SessionState.IDLE
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	rounds = 0
-	pomodoro.set_wait_time(wait_time)
-	new_task.text_submitted.connect(_on_add_pressed)
-	add.pressed.connect(add_task)
-	
+	pomodoro_timer.set_wait_time(work_seconds)
+	new_task_input.text_submitted.connect(_on_task_text_submitted)
+	sync_ui()
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	if pomodoro.is_stopped():
-		return
-		
-	update_timer_label()
-	update_rounds()
+	if state == SessionState.RUNNING:
+		update_timer_label()
 
-func update_timer_label():
-	var time_left := ceili(pomodoro.time_left if pomodoro.time_left > 0 else pomodoro.get_wait_time())
+func _on_task_text_submitted(_text: String) -> void:
+	add_task()
+
+# Single place that decides what the UI looks like for the current state.
+func sync_ui() -> void:
+	match state:
+		SessionState.IDLE:
+			start_pause_button.text = "Start"
+			input_row.show()
+		SessionState.RUNNING:
+			start_pause_button.text = "Pause"
+			input_row.hide()
+		SessionState.PAUSED:
+			start_pause_button.text = "Resume"
+			input_row.show()
+		SessionState.FINISHED:
+			start_pause_button.text = "Start"
+			input_row.show()
+
+	if state == SessionState.FINISHED:
+		round_label.text = "DONE"
+	else:
+		round_label.text = "%d / %d" % [rounds, round_count]
+
+	update_timer_label()
+
+func update_timer_label() -> void:
+	var time_left := ceili(pomodoro_timer.time_left if pomodoro_timer.time_left > 0 else pomodoro_timer.get_wait_time())
 	var minutes := time_left / 60
 	var seconds := time_left % 60
 	time_label.text = "%02d:%02d" % [minutes, seconds]
 
-func update_rounds():
-	round_label.text = "%d / %d" % [rounds, round_left]
+# Called by both the timeout and the Complete button.
+func record_round() -> void:
+	rounds += 1
 
-func add_round():
-	if rounds < round_left:
-		rounds += 1
-		update_rounds()
+	if rounds > round_count:
+		rounds = round_count
+		state = SessionState.FINISHED
 	else:
-		rounds = 0
-		round_label.text = "DONE"
-		return
+		state = SessionState.IDLE
 
-func _on_add_pressed(_submitted_text: String = "") -> void:
-	add_task()
+	sync_ui()
 
-func _on_task_toggled(is_checked: bool, task: CheckBox) -> void:
-	if is_checked:
-		task.disabled = true
-		var tween = task.create_tween()
-		tween.set_parallel(true)
+func stop_timer() -> void:
+	pomodoro_timer.stop()
+	pomodoro_timer.paused = false
 
-		tween.tween_property(task, "scale", Vector2(1.8, 1.8), 0.15) \
-			.set_trans(Tween.TRANS_BACK) \
-			.set_ease(Tween.EASE_OUT)
-
-		tween.tween_property(task, "rotation", deg_to_rad(12), 0.15)
-		$AudioStreamPlayer2D.play()
-		
-		tween.tween_property(task, "modulate:a", 0.0, 0.15)
-
-		await tween.finished
-		task.queue_free()
-	else:
-		return
-	
-func add_task():
-	var task_name = new_task.text.strip_edges()
+func add_task() -> void:
+	var task_name: String = new_task_input.text.strip_edges()
 
 	if task_name.is_empty():
 		return
-		
-	var task = CheckBox.new()
-	task.text = task_name
-	
-	task.toggled.connect(_on_task_toggled.bind(task))
-	
-	tasks_container.add_child(task)
-	new_task.clear()
-	new_task.release_focus()
-	new_task.grab_focus()
-	new_task.grab_click_focus()
 
-func _on_start_paused_pressed() -> void:
-	if pomodoro.is_stopped():
-		pomodoro.start()
-		start_paused.text = "Pause"
-		h_box_container.hide()
+	var task := CheckBox.new()
+	task.text = task_name
+	task.toggled.connect(_on_task_toggled.bind(task))
+
+	tasks_list.add_child(task)
+
+	new_task_input.clear()
+	new_task_input.release_focus()
+	new_task_input.grab_focus()
+	new_task_input.grab_click_focus()
+
+func _on_task_toggled(is_checked: bool, task: CheckBox) -> void:
+	if not is_checked:
 		return
-		
-	pomodoro.paused = not pomodoro.paused
-	start_paused.text = "Start" if pomodoro.paused else "Pause"	
+
+	task.disabled = true
+	sfx_player.play()
+
+	var tween: Tween = task.create_tween()
+	tween.set_parallel(true)
+
+	tween.tween_property(task, "scale", Vector2(1.8, 1.8), 0.15) \
+		.set_trans(Tween.TRANS_BACK) \
+		.set_ease(Tween.EASE_OUT)
+
+	tween.tween_property(task, "rotation", deg_to_rad(12), 0.15)
+	tween.tween_property(task, "modulate:a", 0.0, 0.15)
+
+	await tween.finished
+	task.queue_free()
+
+func _on_start_pause_pressed() -> void:
+	match state:
+		SessionState.IDLE, SessionState.FINISHED:
+			if state == SessionState.FINISHED:
+				rounds = 0
+			state = SessionState.RUNNING
+			pomodoro_timer.start()
+		SessionState.RUNNING:
+			state = SessionState.PAUSED
+			pomodoro_timer.paused = true
+		SessionState.PAUSED:
+			state = SessionState.RUNNING
+			pomodoro_timer.paused = false
+
+	sync_ui()
 
 func _on_pomodoro_timeout() -> void:
-	add_round()
-	
+	stop_timer()
+	record_round()
+
 func _on_reset_pressed() -> void:
-	pomodoro.stop()
-	h_box_container.show()
-	pomodoro.paused = false
-	pomodoro.set_wait_time(wait_time)	
-	start_paused.text = "Start"
-	update_timer_label()
+	stop_timer()
+	pomodoro_timer.set_wait_time(work_seconds)
+	rounds = 0
+	state = SessionState.IDLE
+
+	sync_ui()
 
 func _on_complete_pressed() -> void:
-	if pomodoro.is_stopped():
+	if state != SessionState.RUNNING and state != SessionState.PAUSED:
 		return
-	else:
-		h_box_container.show()
-		add_round()
-		_on_reset_pressed()
+
+	stop_timer()
+	record_round()
