@@ -9,23 +9,31 @@ script = ExtResource("1_row")
 [node name="margin" type="MarginContainer" parent="."]
 layout_mode = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 7
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 7
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 9
 
-[node name="content" type="HBoxContainer" parent="margin"]
+[node name="top" type="HBoxContainer" parent="margin"]
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="check" type="CheckBox" parent="margin/content"]
+[node name="check" type="CheckBox" parent="margin/top"]
 layout_mode = 2
 
-[node name="label" type="Label" parent="margin/content"]
+[node name="label" type="Label" parent="margin/top"]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
+theme_type_variation = &"TaskLabel"
 text = "Task"
 vertical_alignment = 1
 clip_text = true
+
+[node name="tags" type="HBoxContainer" parent="margin/top"]
+layout_mode = 2
+size_flags_horizontal = 8
+mouse_filter = 2
+theme_override_constants/separation = 5
+alignment = 2

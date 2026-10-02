@@ -1,10 +1,12 @@
 extends PanelContainer
 
-@onready var check: CheckBox = $margin/content/check
-@onready var label: Label = $margin/content/label
+@onready var check: CheckBox = $margin/top/check
+@onready var label: Label = $margin/top/label
+@onready var tags_row: HBoxContainer = $margin/top/tags
 
-signal completed(row: PanelContainer)
+signal completed(row: PanelContainer, data: TaskData)
 
+var data: TaskData
 var _done := false
 var _card_style: StyleBox
 var _hover_style: StyleBox
@@ -18,8 +20,24 @@ func _ready() -> void:
 	mouse_entered.connect(_on_mouse_entered)
 	mouse_exited.connect(_on_mouse_exited)
 
-func setup(task_name: String) -> void:
-	label.text = task_name
+func setup(task_data: TaskData) -> void:
+	data = task_data
+	label.text = task_data.title
+	_build_tags(task_data.tags)
+
+func _build_tags(tags: PackedStringArray) -> void:
+	for child in tags_row.get_children():
+		tags_row.remove_child(child)
+		child.queue_free()
+
+	tags_row.visible = not tags.is_empty()
+
+	for tag in tags:
+		var chip := Label.new()
+		chip.text = tag
+		chip.theme_type_variation = &"TagChip"
+		chip.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		tags_row.add_child(chip)
 
 func _on_mouse_entered() -> void:
 	if not _done:
@@ -39,5 +57,6 @@ func _on_check_toggled(is_checked: bool) -> void:
 	add_theme_stylebox_override("panel", _card_style)
 
 	label.add_theme_color_override("font_color", Color(0.443137, 0.443137, 0.521569, 1))
+	tags_row.modulate = Color(0.6, 0.6, 0.6, 0.6)
 
-	completed.emit(self)
+	completed.emit(self, data)

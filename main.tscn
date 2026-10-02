@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://d4luxcwqoyk28"]
+[gd_scene format=3 uid="uid://d4luxcwqoyk28"]
 
 [ext_resource type="Script" uid="uid://b6y8rd7xrmrd2" path="res://main.gd" id="1_ig7tw"]
 [ext_resource type="Theme" path="res://theme/theme.tres" id="2_theme"]
@@ -84,6 +84,29 @@ custom_minimum_size = Vector2(34, 0)
 layout_mode = 2
 text = "+"
 
+[node name="stats_bar" type="Label" parent="app_bg/layout" unique_id=555000120]
+layout_mode = 2
+theme_type_variation = &"StatsLabel"
+text = "0m focused · 0 sessions"
+horizontal_alignment = 1
+
+[node name="log_dir_row" type="HBoxContainer" parent="app_bg/layout" unique_id=555000121]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="log_dir_input" type="LineEdit" parent="app_bg/layout/log_dir_row" unique_id=555000122]
+layout_mode = 2
+size_flags_horizontal = 3
+tooltip_text = "Where daily markdown logs are written. Press Enter to apply."
+placeholder_text = "Focus log folder…"
+caret_blink = true
+
+[node name="browse_button" type="Button" parent="app_bg/layout/log_dir_row" unique_id=555000123]
+custom_minimum_size = Vector2(74, 0)
+layout_mode = 2
+tooltip_text = "Choose a folder"
+text = "Browse"
+
 [node name="task_area" type="VBoxContainer" parent="app_bg/layout" unique_id=555000111]
 layout_mode = 2
 size_flags_vertical = 3
@@ -109,6 +132,37 @@ theme_override_constants/separation = 6
 
 [node name="pomodoro_timer" type="Timer" parent="." unique_id=1665342333]
 one_shot = true
+
+[node name="folder_dialog" type="FileDialog" parent="." unique_id=555000140]
+title = "Choose where to write focus logs"
+size = Vector2i(560, 400)
+access = 2
+use_native_dialog = true
+file_mode = 2
+show_hidden_files = false
+
+[node name="use_folder" type="Button" parent="folder_dialog" unique_id=555000141]
+layout_mode = 0
+text = "Use this folder"
+
+[node name="tag_popup" type="VBoxContainer" parent="." unique_id=555000130]
+visible = false
+layout_mode = 0
+offset_left = 12.0
+offset_top = 250.0
+offset_right = 388.0
+offset_bottom = 320.0
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="suggestion_scroll" type="ScrollContainer" parent="tag_popup" unique_id=555000131]
+layout_mode = 2
+horizontal_scroll_mode = 0
+
+[node name="suggestions" type="VBoxContainer" parent="tag_popup/suggestion_scroll" unique_id=555000132]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
 
 [node name="sfx_player" type="AudioStreamPlayer" parent="." unique_id=1322128623]
 stream = ExtResource("3_0xm2m")
